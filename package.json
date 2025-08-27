@@ -4,10 +4,7 @@
   "files": [
     "pkg-node/uplc_wasm_bg.wasm",
     "pkg-node/uplc_wasm.js",
-    "pkg-node/uplc_wasm.d.ts",
-    "pkg-web/uplc_wasm_bg.wasm",
-    "pkg-web/uplc_wasm.js",
-    "pkg-web/uplc_wasm.d.ts"
+    "pkg-node/uplc_wasm.d.ts"
   ],
   "main": "pkg-node/uplc_wasm.js",
   "types": "pkg-node/uplc_wasm.d.ts"
