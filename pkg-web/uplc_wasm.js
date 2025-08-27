@@ -1,12 +1,8 @@
-
-let imports = {};
-imports['__wbindgen_placeholder__'] = module.exports;
 let wasm;
-const { TextDecoder } = require(`util`);
 
-let cachedTextDecoder = new TextDecoder('utf-8', { ignoreBOM: true, fatal: true });
+const cachedTextDecoder = (typeof TextDecoder !== 'undefined' ? new TextDecoder('utf-8', { ignoreBOM: true, fatal: true }) : { decode: () => { throw Error('TextDecoder not available') } } );
 
-cachedTextDecoder.decode();
+if (typeof TextDecoder !== 'undefined') { cachedTextDecoder.decode(); };
 
 let cachedUint8ArrayMemory0 = null;
 
@@ -107,7 +103,7 @@ function passArrayJsValueToWasm0(array, malloc) {
 * @param {number} slot_config_slot_length
 * @returns {(JsEvalResult)[]}
 */
-module.exports.eval_phase_two_raw = function(tx_bytes, utxos_refs_bytes, utxos_outputs_bytes, cost_mdls_bytes, cpu_budget, mem_budget, slot_config_zero_time, slot_config_zero_slot, slot_config_slot_length) {
+export function eval_phase_two_raw(tx_bytes, utxos_refs_bytes, utxos_outputs_bytes, cost_mdls_bytes, cpu_budget, mem_budget, slot_config_zero_time, slot_config_zero_slot, slot_config_slot_length) {
     try {
         const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
         const ptr0 = passArray8ToWasm0(tx_bytes, wasm.__wbindgen_malloc);
@@ -132,7 +128,7 @@ module.exports.eval_phase_two_raw = function(tx_bytes, utxos_refs_bytes, utxos_o
     } finally {
         wasm.__wbindgen_add_to_stack_pointer(16);
     }
-};
+}
 
 function getArrayU8FromWasm0(ptr, len) {
     ptr = ptr >>> 0;
@@ -143,7 +139,7 @@ function getArrayU8FromWasm0(ptr, len) {
 * @param {Uint8Array} plutus_script_bytes
 * @returns {Uint8Array}
 */
-module.exports.apply_params_to_script = function(params_bytes, plutus_script_bytes) {
+export function apply_params_to_script(params_bytes, plutus_script_bytes) {
     try {
         const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
         const ptr0 = passArray8ToWasm0(params_bytes, wasm.__wbindgen_malloc);
@@ -164,14 +160,14 @@ module.exports.apply_params_to_script = function(params_bytes, plutus_script_byt
     } finally {
         wasm.__wbindgen_add_to_stack_pointer(16);
     }
-};
+}
 
 const JsEvalResultFinalization = (typeof FinalizationRegistry === 'undefined')
     ? { register: () => {}, unregister: () => {} }
     : new FinalizationRegistry(ptr => wasm.__wbg_jsevalresult_free(ptr >>> 0, 1));
 /**
 */
-class JsEvalResult {
+export class JsEvalResult {
 
     static __wrap(ptr) {
         ptr = ptr >>> 0;
@@ -246,14 +242,13 @@ class JsEvalResult {
         return takeObject(ret);
     }
 }
-module.exports.JsEvalResult = JsEvalResult;
 
 const JsExBudgetFinalization = (typeof FinalizationRegistry === 'undefined')
     ? { register: () => {}, unregister: () => {} }
     : new FinalizationRegistry(ptr => wasm.__wbg_jsexbudget_free(ptr >>> 0, 1));
 /**
 */
-class JsExBudget {
+export class JsExBudget {
 
     static __wrap(ptr) {
         ptr = ptr >>> 0;
@@ -301,14 +296,13 @@ class JsExBudget {
         wasm.__wbg_set_jsexbudget_mem(this.__wbg_ptr, arg0);
     }
 }
-module.exports.JsExBudget = JsExBudget;
 
 const JsTraceFinalization = (typeof FinalizationRegistry === 'undefined')
     ? { register: () => {}, unregister: () => {} }
     : new FinalizationRegistry(ptr => wasm.__wbg_jstrace_free(ptr >>> 0, 1));
 /**
 */
-class JsTrace {
+export class JsTrace {
 
     static __wrap(ptr) {
         ptr = ptr >>> 0;
@@ -368,70 +362,151 @@ class JsTrace {
         }
     }
 }
-module.exports.JsTrace = JsTrace;
 
-module.exports.__wbindgen_string_new = function(arg0, arg1) {
-    const ret = getStringFromWasm0(arg0, arg1);
-    return addHeapObject(ret);
-};
+async function __wbg_load(module, imports) {
+    if (typeof Response === 'function' && module instanceof Response) {
+        if (typeof WebAssembly.instantiateStreaming === 'function') {
+            try {
+                return await WebAssembly.instantiateStreaming(module, imports);
 
-module.exports.__wbg_jstrace_new = function(arg0) {
-    const ret = JsTrace.__wrap(arg0);
-    return addHeapObject(ret);
-};
+            } catch (e) {
+                if (module.headers.get('Content-Type') != 'application/wasm') {
+                    console.warn("`WebAssembly.instantiateStreaming` failed because your server does not serve wasm with `application/wasm` MIME type. Falling back to `WebAssembly.instantiate` which is slower. Original error:\n", e);
 
-module.exports.__wbindgen_object_clone_ref = function(arg0) {
-    const ret = getObject(arg0);
-    return addHeapObject(ret);
-};
+                } else {
+                    throw e;
+                }
+            }
+        }
 
-module.exports.__wbindgen_memory = function() {
-    const ret = wasm.memory;
-    return addHeapObject(ret);
-};
+        const bytes = await module.arrayBuffer();
+        return await WebAssembly.instantiate(bytes, imports);
 
-module.exports.__wbg_buffer_b7b08af79b0b0974 = function(arg0) {
-    const ret = getObject(arg0).buffer;
-    return addHeapObject(ret);
-};
+    } else {
+        const instance = await WebAssembly.instantiate(module, imports);
 
-module.exports.__wbg_newwithbyteoffsetandlength_8a2cb9ca96b27ec9 = function(arg0, arg1, arg2) {
-    const ret = new Uint8Array(getObject(arg0), arg1 >>> 0, arg2 >>> 0);
-    return addHeapObject(ret);
-};
+        if (instance instanceof WebAssembly.Instance) {
+            return { instance, module };
 
-module.exports.__wbg_new_ea1883e1e5e86686 = function(arg0) {
-    const ret = new Uint8Array(getObject(arg0));
-    return addHeapObject(ret);
-};
+        } else {
+            return instance;
+        }
+    }
+}
 
-module.exports.__wbg_jsevalresult_new = function(arg0) {
-    const ret = JsEvalResult.__wrap(arg0);
-    return addHeapObject(ret);
-};
+function __wbg_get_imports() {
+    const imports = {};
+    imports.wbg = {};
+    imports.wbg.__wbindgen_string_new = function(arg0, arg1) {
+        const ret = getStringFromWasm0(arg0, arg1);
+        return addHeapObject(ret);
+    };
+    imports.wbg.__wbg_jstrace_new = function(arg0) {
+        const ret = JsTrace.__wrap(arg0);
+        return addHeapObject(ret);
+    };
+    imports.wbg.__wbindgen_object_clone_ref = function(arg0) {
+        const ret = getObject(arg0);
+        return addHeapObject(ret);
+    };
+    imports.wbg.__wbindgen_memory = function() {
+        const ret = wasm.memory;
+        return addHeapObject(ret);
+    };
+    imports.wbg.__wbg_buffer_b7b08af79b0b0974 = function(arg0) {
+        const ret = getObject(arg0).buffer;
+        return addHeapObject(ret);
+    };
+    imports.wbg.__wbg_newwithbyteoffsetandlength_8a2cb9ca96b27ec9 = function(arg0, arg1, arg2) {
+        const ret = new Uint8Array(getObject(arg0), arg1 >>> 0, arg2 >>> 0);
+        return addHeapObject(ret);
+    };
+    imports.wbg.__wbg_new_ea1883e1e5e86686 = function(arg0) {
+        const ret = new Uint8Array(getObject(arg0));
+        return addHeapObject(ret);
+    };
+    imports.wbg.__wbg_jsevalresult_new = function(arg0) {
+        const ret = JsEvalResult.__wrap(arg0);
+        return addHeapObject(ret);
+    };
+    imports.wbg.__wbindgen_object_drop_ref = function(arg0) {
+        takeObject(arg0);
+    };
+    imports.wbg.__wbg_length_8339fcf5d8ecd12e = function(arg0) {
+        const ret = getObject(arg0).length;
+        return ret;
+    };
+    imports.wbg.__wbg_set_d1e79e2388520f18 = function(arg0, arg1, arg2) {
+        getObject(arg0).set(getObject(arg1), arg2 >>> 0);
+    };
+    imports.wbg.__wbindgen_throw = function(arg0, arg1) {
+        throw new Error(getStringFromWasm0(arg0, arg1));
+    };
 
-module.exports.__wbindgen_object_drop_ref = function(arg0) {
-    takeObject(arg0);
-};
+    return imports;
+}
 
-module.exports.__wbg_length_8339fcf5d8ecd12e = function(arg0) {
-    const ret = getObject(arg0).length;
-    return ret;
-};
+function __wbg_init_memory(imports, memory) {
 
-module.exports.__wbg_set_d1e79e2388520f18 = function(arg0, arg1, arg2) {
-    getObject(arg0).set(getObject(arg1), arg2 >>> 0);
-};
+}
 
-module.exports.__wbindgen_throw = function(arg0, arg1) {
-    throw new Error(getStringFromWasm0(arg0, arg1));
-};
+function __wbg_finalize_init(instance, module) {
+    wasm = instance.exports;
+    __wbg_init.__wbindgen_wasm_module = module;
+    cachedDataViewMemory0 = null;
+    cachedUint8ArrayMemory0 = null;
 
-const path = require('path').join(__dirname, 'uplc_wasm_bg.wasm');
-const bytes = require('fs').readFileSync(path);
 
-const wasmModule = new WebAssembly.Module(bytes);
-const wasmInstance = new WebAssembly.Instance(wasmModule, imports);
-wasm = wasmInstance.exports;
-module.exports.__wasm = wasm;
 
+    return wasm;
+}
+
+function initSync(module) {
+    if (wasm !== undefined) return wasm;
+
+
+    if (typeof module !== 'undefined' && Object.getPrototypeOf(module) === Object.prototype)
+    ({module} = module)
+    else
+    console.warn('using deprecated parameters for `initSync()`; pass a single object instead')
+
+    const imports = __wbg_get_imports();
+
+    __wbg_init_memory(imports);
+
+    if (!(module instanceof WebAssembly.Module)) {
+        module = new WebAssembly.Module(module);
+    }
+
+    const instance = new WebAssembly.Instance(module, imports);
+
+    return __wbg_finalize_init(instance, module);
+}
+
+async function __wbg_init(module_or_path) {
+    if (wasm !== undefined) return wasm;
+
+
+    if (typeof module_or_path !== 'undefined' && Object.getPrototypeOf(module_or_path) === Object.prototype)
+    ({module_or_path} = module_or_path)
+    else
+    console.warn('using deprecated parameters for the initialization function; pass a single object instead')
+
+    if (typeof module_or_path === 'undefined') {
+        module_or_path = new URL('uplc_wasm_bg.wasm', import.meta.url);
+    }
+    const imports = __wbg_get_imports();
+
+    if (typeof module_or_path === 'string' || (typeof Request === 'function' && module_or_path instanceof Request) || (typeof URL === 'function' && module_or_path instanceof URL)) {
+        module_or_path = fetch(module_or_path);
+    }
+
+    __wbg_init_memory(imports);
+
+    const { instance, module } = await __wbg_load(await module_or_path, imports);
+
+    return __wbg_finalize_init(instance, module);
+}
+
+export { initSync };
+export default __wbg_init;
