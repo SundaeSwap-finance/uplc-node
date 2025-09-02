@@ -13,5 +13,22 @@
     "pkg-bundler/uplc_wasm.d.ts"
   ],
   "main": "pkg-node/uplc_wasm.js",
-  "types": "pkg-node/uplc_wasm.d.ts"
+  "types": "pkg-node/uplc_wasm.d.ts",
+  "exports": {
+    ".": {
+      "import": "./pkg-node/uplc_wasm.js",
+      "default": "./pkg-node/uplc_wasm.js",
+      "types": "./pkg-node/uplc_wasm.d.ts"
+    },
+    "./web": {
+      "import": "./pkg-web/uplc_wasm.js",
+      "default": "./pkg-web/uplc_wasm.js",
+      "types": "./pkg-web/uplc_wasm.d.ts"
+    },
+    "./bundler": {
+      "import": "./pkg-bundler/uplc_wasm.js",
+      "default": "./pkg-bundler/uplc_wasm.js",
+      "types": "./pkg-bundler/uplc_wasm.d.ts"
+    }
+  }
 }
