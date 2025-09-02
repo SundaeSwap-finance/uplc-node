@@ -30,3 +30,4 @@ jobs:
           path: |
             pkg-node
             pkg-web
+            pkg-bundler
